@@ -1,0 +1,20 @@
+<span class="note">※は必須項目です。</span>
+
+<table class="show">
+  <tr>
+    <th><%= f.label :title %> <span class="note">※</span></th>
+    <td><%= f.text_field :title, :class => 'title' %></td>
+  </tr>
+</table>
+
+<%= render 'webdb/admin/shared/form', db: @item.db, item_values: @item.item_values if @item.db %>
+
+<% if defined?(ZomekiLogin::Engine) %>
+  <table class="show">
+    <tr>
+      <th><%= f.label :editor_id %></th>
+      <td><%#= select_tag 'item[editor_id]',
+                         options_from_collection_for_select(Login::Content::User.where(site_id: Core.site.id), :id, :name, @item.member_content_id), include_blank: true %></td>
+     </tr>
+   </table>
+<% end %>
