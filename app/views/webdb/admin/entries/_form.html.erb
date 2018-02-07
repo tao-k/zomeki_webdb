@@ -1,3 +1,4 @@
+<%= init_ckeditor baseHref: "#{webdb_db_entries_path(content: @content, db_id: @db.id, id: @item.id.to_i)}/" %>
 <span class="note">※は必須項目です。</span>
 
 <table class="show">
@@ -13,8 +14,10 @@
   <table class="show">
     <tr>
       <th><%= f.label :editor_id %></th>
-      <td><%#= select_tag 'item[editor_id]',
-                         options_from_collection_for_select(Login::Content::User.where(site_id: Core.site.id), :id, :name, @item.member_content_id), include_blank: true %></td>
+      <td><%= select_tag 'item[editor_id]',
+                         options_from_collection_for_select(@db.editor_content.try(:users), :id, :account, @item.editor_id), include_blank: true %></td>
      </tr>
    </table>
 <% end %>
+
+<%= render 'sys/admin/_partial/files/form', f: f, item: @item, content: @content %>

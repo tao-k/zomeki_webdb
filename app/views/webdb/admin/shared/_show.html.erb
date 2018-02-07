@@ -1,0 +1,25 @@
+<%- return '' unless defined?(db) && defined?(item_values) && defined?(files) -%>
+
+<%- db.items.public_state.each do |item| -%>
+  <%- if item.item_type == 'rich_text' -%>
+  <table class="show">
+    <tr>
+      <th><%= item.title %></th>
+    </tr>
+    <tr>
+      <td class="cke_editor_wrapper">
+        <%= text_area_tag "item_values[#{item.name}]", item_values[item.name].to_s.gsub(/("|')file_contents\//, '\1' + file_uri), class: 'ckeditor' %>
+      </td>
+    </tr>
+  </table>
+  <%- else -%>
+  <table class="show">
+    <tr>
+      <th><%= item.title %></th>
+      <td>
+        <%= simple_format entry_item_value(item, @item, files) %>
+      </td>
+    </tr>
+  </table>
+  <%- end -%>
+<%- end -%>

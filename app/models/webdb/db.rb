@@ -52,6 +52,17 @@ class Webdb::Db < ApplicationRecord
     return item
   end
 
+  def member_content
+    return nil unless defined?(ZomekiLogin::Engine)
+    return nil if member_content_id.blank?
+    Login::Content::User.find_by(id: member_content_id)
+  end
+
+  def editor_content
+    return nil unless defined?(ZomekiLogin::Engine)
+    return nil if editor_content_id.blank?
+    Login::Content::User.find_by(id: editor_content_id)
+  end
   private
 
   def set_defaults

@@ -11,7 +11,7 @@ class Webdb::Item < ApplicationRecord
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   ITEM_TYPE_OPTIONS = [['入力/1行（テキストフィールド）', 'text_field'], ['入力/複数行（テキストエリア）', 'text_area'], ['入力/フリー（エディタ付）', 'rich_text'],
                        ['選択/単数回答（プルダウン）', 'select'], ['選択/単数回答（ラジオボタン）', 'radio_button'], ['添付ファイル', 'attachment_file'],
-                       ['郵便番号', 'postal_code'],['曜日／時間', 'office_hours'],
+                       ['郵便番号', 'postal_code'],['曜日／午前・午後', 'ampm'],['曜日／時間', 'office_hours'],
                        ['空枠/数値', 'blank_integer'],['空枠/数値（曜日）', 'blank_weekday'],['空枠/記号（日程）', 'blank_date']]
 
   default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }

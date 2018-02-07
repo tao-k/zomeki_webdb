@@ -16,8 +16,12 @@ ZomekiCMS::Application.routes.draw do
       resources :items,
         :controller => 'admin/items'
       resources :entries,
-        :controller => 'admin/entries'
-
+        :controller => 'admin/entries' do
+          collection do
+            post :import
+            get  :import
+          end
+        end
       end
 
     ## nodes
@@ -33,6 +37,6 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
-    get 'node_books(/index.:format)' => 'public/node/books#index'
+    get 'node_dbs(/index.:format)' => 'public/node/dbs#index'
   end
 end
