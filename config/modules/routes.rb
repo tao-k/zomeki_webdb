@@ -37,6 +37,13 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
-    get 'node_dbs(/index.:format)' => 'public/node/dbs#index'
+
+    get 'node_dbs(/index)'            => 'public/node/dbs#index'
+    get 'node_dbs/:id(/index)'        => 'public/node/dbs#show'
+    get 'node_dbs/:db_id/map'         => 'public/node/dbs#map'
+    get 'node_dbs/:db_id/address'     => 'public/node/dbs#address'
+    get 'node_dbs/:db_id/search'      => 'public/node/dbs#result'
+    get 'node_dbs/:db_id/entry/:name' => 'public/node/dbs#entry'
   end
+
 end

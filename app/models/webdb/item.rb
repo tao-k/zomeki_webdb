@@ -1,16 +1,17 @@
 class Webdb::Item < ApplicationRecord
   include Sys::Model::Base
-  include Sys::Model::Base::Config
   include Sys::Model::Auth::Manager
   include Cms::Model::Site
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Editor
   include Sys::Model::Rel::EditableGroup
-  include StateText
+  enum_ish :state, [:public, :closed], predicate: true
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   ITEM_TYPE_OPTIONS = [['入力/1行（テキストフィールド）', 'text_field'], ['入力/複数行（テキストエリア）', 'text_area'], ['入力/フリー（エディタ付）', 'rich_text'],
-                       ['選択/単数回答（プルダウン）', 'select'], ['選択/単数回答（ラジオボタン）', 'radio_button'], ['添付ファイル', 'attachment_file'],
+                       ['選択/単数回答（プルダウン）', 'select'], ['選択/単数回答（ラジオボタン）', 'radio_button'],
+                       ['データベース参照選択/単数回答（プルダウン）', 'select_data'],['データベース参照選択/単数回答（ラジオボタン）', 'radio_data'],
+                       ['添付ファイル', 'attachment_file'],
                        ['郵便番号', 'postal_code'],['曜日／午前・午後', 'ampm'],['曜日／時間', 'office_hours'],
                        ['空枠/数値', 'blank_integer'],['空枠/数値（曜日）', 'blank_weekday'],['空枠/記号（日程）', 'blank_date']]
 
@@ -18,6 +19,9 @@ class Webdb::Item < ApplicationRecord
 
   belongs_to :db
   validates :db_id, presence: true
+
+  belongs_to :reference_db, foreign_key: :reference_id, class_name: 'Webdb::Db'
+  belongs_to :reference_item, foreign_key: :reference_item_id, class_name: 'Webdb::Item'
 
   delegate :content, to: :db
 
@@ -36,12 +40,29 @@ class Webdb::Item < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
 
+  scope :target_search_state, ->{
+    public_state.where(is_target_search: true)
+  }
+
+  scope :target_keyword_state, ->{
+    public_state.where(is_target_keyword: true)
+  }
+
+  scope :target_sort_state, ->{
+    public_state.where(is_target_sort: true)
+  }
+
   def state_public?
     state == 'public'
   end
 
   def state_closed?
     state == 'closed'
+  end
+
+  def item_options_for_select_data
+    return [] if reference_db.blank? || reference_item.blank?
+    reference_db.entries.public_state.map{|e| [e.item_values[reference_item.name], e.id] }
   end
 
   def item_options_for_select

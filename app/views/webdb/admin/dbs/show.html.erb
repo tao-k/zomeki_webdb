@@ -1,7 +1,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= @item.status.name %></td>
+    <td><%= @item.state_text %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :title %></th>
@@ -9,7 +9,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :body %></th>
-    <td><%=hbr @item.body %></td>
+    <td><%= @item.body %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :sort_no %></th>

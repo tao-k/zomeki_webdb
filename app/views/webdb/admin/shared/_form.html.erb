@@ -29,7 +29,16 @@
           <%= select_tag "item[item_values][#{item.name}]",
                          options_for_select(item.item_options_for_select, item_values[item.name]), style: item.style_attribute,
                          include_blank: true %>
-        <%- when 'radio_button' -%>
+         <%- when 'select_data' -%>
+          <%= select_tag "item[item_values][#{item.name}]",
+                         options_for_select(item.item_options_for_select_data, item_values[item.name]), style: item.style_attribute,
+                         include_blank: true %>
+         <%- when 'radio_data' -%>
+          <%- item.item_options_for_select_data.each do |option| -%>
+            <label><%= radio_button_tag "item[item_values][#{item.name}]", option[1],
+                                        option[1] == item_values[item.name].to_i, style: item.style_attribute %> <%= option[0] %></label>
+          <%- end -%>
+         <%- when 'radio_button' -%>
           <%- item.item_options_for_select.each do |option| -%>
             <label><%= radio_button_tag "item[item_values][#{item.name}]", option,
                                         option == item_values[item.name], style: item.style_attribute %> <%= option %></label>
@@ -41,7 +50,7 @@
         <%- when 'ampm' -%>
         <div><span>午前</span>
           <%- @item.class::WEEKDAY_OPTIONS.each_with_index{|w, i| -%>
-            <label><%= check_box_tag "item[item_values][#{item.name}][am][#{i}]", '○',
+            <label><%= check_box_tag "item[item_values][#{item.name}][am][#{i}]", true,
               item_values[item.name] && item_values[item.name]['am'] ? item_values[item.name]['am'][i.to_s] : false %><%= w %></label>
           <%- } -%>
         </div>

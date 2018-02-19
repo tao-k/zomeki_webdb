@@ -10,7 +10,7 @@
 
 <%= render 'webdb/admin/shared/form', db: @item.db, item_values: @item.item_values if @item.db %>
 
-<% if defined?(ZomekiLogin::Engine) %>
+<% if defined?(ZomekiLogin::Engine) && @db.editor_content %>
   <table class="show">
     <tr>
       <th><%= f.label :editor_id %></th>
@@ -21,3 +21,5 @@
 <% end %>
 
 <%= render 'sys/admin/_partial/files/form', f: f, item: @item, content: @content %>
+<p class="form">位置情報</p>
+<%= google_map_form f %>

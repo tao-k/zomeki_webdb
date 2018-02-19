@@ -29,12 +29,18 @@ class Webdb::Admin::EntriesController < Cms::Controller::Admin::Base
 
   def create
     @item = @db.entries.build(entry_params)
+    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
+    @item.state = new_state if new_state.present?
+
     _create @item
   end
 
   def update
     @item = @db.entries.find(params[:id])
     @item.attributes = entry_params
+    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
+    @item.state = new_state if new_state.present?
+
     _update @item
   end
 
@@ -66,7 +72,9 @@ class Webdb::Admin::EntriesController < Cms::Controller::Admin::Base
   end
 
   def entry_params
-    params.require(:item).permit(:title, :editor_id, :item_values, :in_target_date).tap do |whitelisted|
+    params.require(:item).permit(:title, :editor_id, :item_values, :in_target_date,
+      :maps_attributes => [:id, :name, :title, :map_lat, :map_lng, :map_zoom,
+      :markers_attributes => [:id, :name, :lat, :lng]]).tap do |whitelisted|
       whitelisted[:item_values] = params[:item][:item_values].permit! if params[:item][:item_values]
       whitelisted[:in_target_dates] = params[:item][:in_target_dates].permit! if params[:item][:in_target_dates]
     end
@@ -82,7 +90,16 @@ class Webdb::Admin::EntriesController < Cms::Controller::Admin::Base
         item_array = [entry.id, entry.title]
         files = entry.files
         db_items.each do |item|
-          item_array << view_context.entry_item_csv_value(item, entry, files)
+          value = entry.item_values[item.name]
+          case item.item_type
+          when 'ampm', 'office_hours', 'blank_weekday'
+            value = entry.item_values[item.name].blank? ? nil : entry.item_values[item.name]['text']
+          when 'select_data', 'radio_data'
+            if select_data = item.item_options_for_select_data
+              select_data.each{|e| value = e[0] if e[1]== entry.item_values[item.name].to_i }
+            end
+          end
+          item_array << value
         end
         csv << item_array
       end

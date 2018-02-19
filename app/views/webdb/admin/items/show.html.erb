@@ -1,7 +1,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= @item.status.name %></td>
+    <td><%= @item.state_text %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :name %></th>
@@ -12,12 +12,20 @@
     <td><%= @item.title %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :item_type %></th>
+    <th><%= @item.class.human_attribute_name :item_type %></th>
     <td><%= @item.item_type_label %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :item_options %><br />（種別が選択の時に使用）</th>
     <td><%=simple_format @item.item_options %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :reference_id %><br />（種別がデータベース参照選択の時に使用）</th>
+    <td><%= @item.reference_db.try(:title) %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :reference_item_id %><br />（種別がデータベース参照選択の時に使用）</th>
+    <td><%= @item.reference_item.try(:title) %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :style_attribute %><br />（style=）</th>
@@ -52,3 +60,5 @@
     </td>
   </tr>
 </table>
+
+<%= creator_view @item %>

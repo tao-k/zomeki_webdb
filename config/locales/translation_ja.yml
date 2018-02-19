@@ -9,6 +9,7 @@ ja:
         id: ID
         state: 状態
         title: データベース名
+        body: 概要
         list_body: 一覧形式HTML
         detail_body: 詳細形式HTML
         member_list_body: 一覧形式HTML（会員閲覧用）
@@ -22,7 +23,7 @@ ja:
       webdb/item:
         state: 状態
         name: アイテムID
-        title: アイテム名
+        title: 名称
         item_type: 種別
         item_options: 選択候補
         style_attribute: スタイルシート
@@ -35,6 +36,8 @@ ja:
         updated_at: 更新日時
         on_use: 利用する
         enabled_resrict: 会員のみ閲覧可
+        reference_id: 参照データベース
+        reference_item_id: 項目
       webdb/entry:
         title: 名称
         item_value: データ

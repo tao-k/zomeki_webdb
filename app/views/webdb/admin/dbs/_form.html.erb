@@ -10,6 +10,10 @@
     <td><%= f.text_field :title, :class => 'title' %></td>
   </tr>
   <tr>
+    <th><%= @item.class.human_attribute_name :body %></th>
+    <td><%= f.text_area :body %></td>
+  </tr>
+  <tr>
     <th><%= f.label :list_body %></th>
     <td><%= f.text_area :list_body, :class => 'body' %></td>
   </tr>

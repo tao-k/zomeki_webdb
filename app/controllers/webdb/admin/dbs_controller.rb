@@ -9,7 +9,12 @@ class Webdb::Admin::DbsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @content.dbs.paginate(page: params[:page], per_page: params[:limit])
+    items = @content.dbs
+    @items = items.paginate(page: params[:page], per_page: params[:limit])
+    respond_to do |format|
+      format.html { render }
+      format.json  { render :json => items.to_json }
+    end
   end
 
   def show
@@ -43,7 +48,7 @@ class Webdb::Admin::DbsController < Cms::Controller::Admin::Base
   private
 
   def db_params
-    params.require(:item).permit(:list_body, :detail_body, :sort_no, :state, :title,
+    params.require(:item).permit(:body, :list_body, :detail_body, :sort_no, :state, :title,
       :member_list_body, :member_detail_body, :member_content_id, :editor_content_id,
       :creator_attributes => [:id, :group_id, :user_id])
   end

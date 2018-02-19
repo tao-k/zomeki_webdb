@@ -1,12 +1,12 @@
 class Webdb::Db < ApplicationRecord
   include Sys::Model::Base
-  include Sys::Model::Base::Config
   include Sys::Model::Auth::Manager
   include Cms::Model::Site
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Editor
   include Sys::Model::Rel::EditableGroup
-  include StateText
+
+  enum_ish :state, [:public, :closed], predicate: true
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Webdb::Content::Db'
