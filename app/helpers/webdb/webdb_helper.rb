@@ -36,7 +36,7 @@ module Webdb::WebdbHelper
       if select_data = item.item_options_for_select_data
         select_data.each{|e| value = e[0] if e[1]== entry.item_values[item.name].to_i }
       end
-    when 'ampm', 'office_hours', 'blank_weekday', 'blank_date'
+    when 'ampm', 'office_hours', 'blank_weekday'
       if entry.item_values[item.name]
         value =  entry.item_values[item.name]['text']
       end

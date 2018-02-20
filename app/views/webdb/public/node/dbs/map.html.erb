@@ -1,10 +1,12 @@
 <div class="contentMapMarkers">
+  <%= text_field_tag "address", '' %><input type="button" value="検索" id="doGeocode" />
   <div id="map_canvas" style="height: 350px; width: 700px;"></div>
 
   <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{@content.site.google_map_api_key}&region=jp" %>
   <%= javascript_include_tag '/_common/modules/map/js/map.js' %>
   <%= javascript_tag do -%>
   var map;
+  var geocoder = new google.maps.Geocoder();
   google.maps.event.addDomListener(window, 'load', function (event) {
     <%- unless @all_markers.empty?
           bounds = @all_markers.inject(min: {}, max: {}){|result, marker|
@@ -38,6 +40,24 @@
 
     <%- end -%>
   });
+
+  $('#doGeocode').on('click', function() {
+    var address = $('#address').val();
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == 'OK') {
+        var title = results[0].formatted_address;
+        var lat = results[0].geometry.location.lat();
+        var lng = results[0].geometry.location.lng();
+        marker_id = lat + '_' + lng;
+        map.set_marker(marker_id, lat, lng, title, title, null );
+        map.move_to(marker_id);
+        return false;
+      } else {
+        alert('該当する住所がありません。');
+      }
+    });
+  });
+
   <%- end -%>
 
   <%- unless @all_markers.empty? -%>

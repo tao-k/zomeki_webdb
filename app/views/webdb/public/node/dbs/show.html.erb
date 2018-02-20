@@ -40,7 +40,7 @@
           </li>
         <%- } -%>
       <%- else -%>
-        <%= text_field_tag item.name, '' %>
+        <%= text_field_tag "criteria[#{item.name}]", '' %>
       <%end%>
       </ul>
     </fieldset>

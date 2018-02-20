@@ -54,4 +54,8 @@ class Webdb::Public::Node::DbsController < Cms::Controller::Public::Base
     params[:criteria] ? params[:criteria].to_unsafe_h : {}
   end
 
+  def sort_key
+    params[:sort] ? params[:sort] : nil
+  end
+
 end
