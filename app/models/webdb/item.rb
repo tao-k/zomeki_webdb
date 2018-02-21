@@ -11,7 +11,7 @@ class Webdb::Item < ApplicationRecord
   ITEM_TYPE_OPTIONS = [['入力/1行（テキストフィールド）', 'text_field'], ['入力/複数行（テキストエリア）', 'text_area'], ['入力/フリー（エディタ付）', 'rich_text'],
                        ['選択/単数回答（プルダウン）', 'select'], ['選択/単数回答（ラジオボタン）', 'radio_button'],
                        ['データベース参照選択/単数回答（プルダウン）', 'select_data'],['データベース参照選択/単数回答（ラジオボタン）', 'radio_data'],
-                       ['添付ファイル', 'attachment_file'],
+                       ['選択/複数回答（チェックボックス）', 'check_box'],['データベース参照選択/複数回答（チェックボックス）', 'check_data'],['添付ファイル', 'attachment_file'],
                        ['郵便番号', 'postal_code'],['曜日／午前・午後', 'ampm'],['曜日／時間', 'office_hours'],
                        ['空枠/数値', 'blank_integer'],['空枠/数値（曜日）', 'blank_weekday'],['空枠/記号（日程）', 'blank_date']]
 

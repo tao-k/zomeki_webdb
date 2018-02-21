@@ -99,6 +99,18 @@ class Webdb::Entry < ApplicationRecord
     return if item_values.blank?
     db.items.each do |item|
       case item.item_type
+      when 'check_box'
+        if item_values[item.name]
+          item_values[item.name]['text'] = item_values[item.name]['check'].present? ? item_values[item.name]['check'].join('／') : nil
+        end
+      when 'check_data'
+        if item_values[item.name] && item_values[item.name]['check'].present?
+          checks = []
+          item_values[item.name]['check'].each{|w|
+            item.item_options_for_select_data.each{|a| checks << a[0] if a[1] == w.to_i}
+          }
+          item_values[item.name]['text'] = checks.join('／')
+        end
       when 'ampm'
         if item_values[item.name]
           weeks = []

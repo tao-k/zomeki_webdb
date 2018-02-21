@@ -19,6 +19,20 @@ class Webdb::EntryCsv < Webdb::Csv
         next
       end
       case item.item_type
+      when 'check_box'
+        json_attributes[item.name] = {}
+        checks = []
+        row[item.title].split(/／/).each_with_index do |w, n|
+          checks << w
+        end
+        json_attributes[item.name]['check'] = checks
+      when 'check_data'
+        json_attributes[item.name] = {}
+        checks = []
+        row[item.title].split(/／/).each{|w|
+          item.item_options_for_select_data.each{|a| checks << a[1].to_s if a[0] == w}
+        }
+        json_attributes[item.name]['check'] = checks
       when 'office_hours'
         json_attributes[item.name] = {}
         json_attributes[item.name]['open'] = {}

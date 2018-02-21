@@ -55,7 +55,7 @@ class Webdb::Admin::EntriesController < Cms::Controller::Admin::Base
       item.db_id = @db.id
       item.file = params[:item][:file]
       if item.save
-        flash[:notice] = "CSVの解析を開始します。"
+        flash[:notice] = "CSVの登録を完了しました。"
         Webdb::ImportEntryJob.perform_now(item.id)
         return redirect_to url_for({:action=>:import})
       else
@@ -92,7 +92,7 @@ class Webdb::Admin::EntriesController < Cms::Controller::Admin::Base
         db_items.each do |item|
           value = entry.item_values[item.name]
           case item.item_type
-          when 'ampm', 'office_hours', 'blank_weekday'
+          when 'ampm', 'office_hours', 'blank_weekday', 'check_box', 'check_data'
             value = entry.item_values[item.name].blank? ? nil : entry.item_values[item.name]['text']
           when 'select_data', 'radio_data'
             if select_data = item.item_options_for_select_data

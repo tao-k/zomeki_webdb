@@ -33,11 +33,16 @@
           <%= select_tag "item[item_values][#{item.name}]",
                          options_for_select(item.item_options_for_select_data, item_values[item.name]), style: item.style_attribute,
                          include_blank: true %>
-         <%- when 'radio_data' -%>
-          <%- item.item_options_for_select_data.each do |option| -%>
-            <label><%= radio_button_tag "item[item_values][#{item.name}]", option[1],
-                                        option[1] == item_values[item.name].to_i, style: item.style_attribute %> <%= option[0] %></label>
-          <%- end -%>
+        <%- when 'check_box' -%>
+          <%- item.item_options_for_select.each_with_index{|w, i| -%>
+            <label><%= check_box_tag "item[item_values][#{item.name}][check][]", w,
+              item_values[item.name] && item_values[item.name]['check'] ? item_values[item.name]['check'].index(w).present? : false %><%= w %></label>
+          <%- } -%>
+         <%- when 'check_data' -%>
+          <%- item.item_options_for_select_data.each_with_index{|w, i| -%>
+            <label><%= check_box_tag "item[item_values][#{item.name}][check][]", w[1],
+              item_values[item.name] && item_values[item.name]['check'] ? item_values[item.name]['check'].index(w[1].to_s).present? : false %><%= w[0] %></label>
+          <%- } -%>
          <%- when 'radio_button' -%>
           <%- item.item_options_for_select.each do |option| -%>
             <label><%= radio_button_tag "item[item_values][#{item.name}]", option,

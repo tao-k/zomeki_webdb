@@ -10,6 +10,8 @@ class Webdb::EntriesFinder < ApplicationFinder
       value = criteria[item.name.to_sym]
       next if value.blank?
       case item.item_type
+      when 'check_box', 'check_data'
+        @entries = @entries.where("item_values -> '#{item.name}' -> 'check' ?& array[:keys]", keys: value.values)
       when 'ampm'
         am_idx = value['am'].present? ? value['am'].keys : []
         pm_idx = value['pm'].present? ? value['pm'].keys : []
