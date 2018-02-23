@@ -41,9 +41,9 @@ class Webdb::Entry < ApplicationRecord
   def public_uri(without_filename: false, with_closed_preview: false)
     uri =
       if with_closed_preview && content.main_node && content.main_node.public_uri.present?
-        "#{content.main_node.public_uri}#{self.db_id}/entry/#{name}"
+        "#{content.main_node.public_uri}#{self.db_id}/entry/#{name}/"
       elsif !with_closed_preview && content.public_node
-        "#{content.public_node.public_uri}#{self.db_id}/entry/#{name}"
+        "#{content.public_node.public_uri}#{self.db_id}/entry/#{name}/"
       end
     return '' unless uri
     uri

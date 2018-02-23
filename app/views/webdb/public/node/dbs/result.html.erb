@@ -1,3 +1,5 @@
-<% @items.each do |item| %>
-  <%= link_to item.title, item.public_uri %>
+<% @items.each_with_index do |item, i| %>
+  <%= raw entry_body(@list_style, @db, item) %>
 <% end %>
+
+<%= paginate @items -%>

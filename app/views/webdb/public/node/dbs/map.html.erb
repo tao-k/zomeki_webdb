@@ -12,6 +12,7 @@
       var map;
       var geocoder = new google.maps.Geocoder();
       var nearbyLocation;
+      var marker_id ='geocodingMarker' ;
       google.maps.event.addDomListener(window, 'load', function (event) {
         <%- unless @all_markers.empty?
               bounds = @all_markers.inject(min: {}, max: {}){|result, marker|
@@ -48,23 +49,36 @@
         <%- end -%>
       });
 
-      $('#doGeocode').on('click', function() {
+      $('#address').keypress( function ( e ) {
+        if ( e.which == 13 ) {
+          doGeocode();
+          return false;
+        }
+      } );
 
+      $('#doGeocode').on('click', function() {
+        doGeocode();
+        return false;
+      });
+
+      function doGeocode(){
         var address = $('#address').val();
         geocoder.geocode( { 'address': address, location: nearbyLocation}, function(results, status) {
           if (status == 'OK') {
+            if(map._markers[marker_id]!=null){
+              map._markers[marker_id].setMap(null);
+            }
             var title = results[0].formatted_address;
             var lat = results[0].geometry.location.lat();
             var lng = results[0].geometry.location.lng();
-            marker_id = lat + '_' + lng;
             map.set_marker(marker_id, lat, lng, title, title, null);
             map.move_to(marker_id);
             return false;
           } else {
-            alert('該当する住所がありません。');
+            alert("座標を取得できませんでした。");
           }
         });
-      });
+      }
 
       <%- end -%>
   </fieldset>

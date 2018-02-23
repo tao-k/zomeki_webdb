@@ -42,9 +42,7 @@ class Webdb::EntryCsv < Webdb::Csv
           opt = d.gsub(/(.*)：(.*)/, '\2')
           idx = entry.class::WEEKDAY_OPTIONS.index(week)
           if idx.present?
-            Rails.logger.debug opt
             hours = opt.split(/～/)
-            Rails.logger.debug hours
             json_attributes[item.name]['open'][idx.to_s]  = hours[0]
             json_attributes[item.name]['close'][idx.to_s] = hours[1]
           else

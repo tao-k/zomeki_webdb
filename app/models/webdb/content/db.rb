@@ -16,8 +16,16 @@ class Webdb::Content::Db < Cms::Content
   end
 
   def default_map_position
-    site.map_coordinate.to_s.split(',').map(&:strip)
+    coordinate = map_coordinate.blank? ? site.map_coordinate : map_coordinate
+    coordinate.to_s.split(',').map(&:strip)
   end
 
+  def map_enabled?
+    setting_value(:map_setting) == 'enabled'
+  end
+
+  def map_coordinate
+    setting_extra_value(:map_setting, :lat_lng)
+  end
 
 end

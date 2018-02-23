@@ -30,7 +30,7 @@
           <%- item.item_options_for_select.each_with_index{|w, i| -%>
             <li>
               <label>
-              <%= check_box_tag "criteria[#{item.name}][#{i}]", w,
+              <%= check_box_tag "criteria[#{item.name}][]", w,
               false %><%=w%></label>
             </li>
           <%- } -%>
@@ -38,8 +38,8 @@
           <%- item.item_options_for_select_data.each_with_index{|w, i| -%>
             <li>
               <label>
-              <%= check_box_tag "criteria[#{item.name}][#{i}]", w,
-                false %><%=w%></label>
+              <%= check_box_tag "criteria[#{item.name}][]", w[1],
+                false %><%=w[0]%></label>
             </li>
           <%- } -%>
         <%- when 'radio_data' -%>

@@ -18,6 +18,6 @@
 
 <%= render 'sys/admin/_partial/files/expanded_view', item: @item, content: @content %>
 
-<%= google_map_view @item %>
+<%= google_map_view @item if @content.map_enabled? %>
 
 <%= creator_view @item %>

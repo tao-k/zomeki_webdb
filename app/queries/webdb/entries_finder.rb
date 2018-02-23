@@ -11,7 +11,7 @@ class Webdb::EntriesFinder < ApplicationFinder
       next if value.blank?
       case item.item_type
       when 'check_box', 'check_data'
-        @entries = @entries.where("item_values -> '#{item.name}' -> 'check' ?& array[:keys]", keys: value.values)
+        @entries = @entries.where("item_values -> '#{item.name}' -> 'check' ?| array[:keys]", keys: value)
       when 'ampm'
         am_idx = value['am'].present? ? value['am'].keys : []
         pm_idx = value['pm'].present? ? value['pm'].keys : []
@@ -26,15 +26,17 @@ class Webdb::EntriesFinder < ApplicationFinder
           @entries = @entries.where("item_values -> '#{item.name}' -> 'pm' ?| array[:keys]", keys: pm_idx)
         end
       else
-        @entries = @entries.where("item_values ->> '#{item.name}' = ?", value)
+        if value.kind_of?(Array)
+          @entries = @entries.where("item_values ->> '#{item.name}' IN(:keys)", keys: value)
+        else
+          @entries = @entries.where("item_values ->> '#{item.name}' like :keyword", keyword: "%#{value}%")
+        end
       end
     end
     #sort_columns = @db.items.target_sort_state.pluck(:name)
     #if sort_key && sort_columns
     #  key, order  = sort_key.split(/\s/)
-    #  Rails.logger.debug sort_columns
     #  if idx = sort_columns.index(key)
-    #    Rails.logger.debug sort_columns[idx]
     #    @entries = @entries.order("item_values ->> '#{sort_columns[idx]}' #{ordering(order)}")
     #  end
     #end

@@ -17,6 +17,7 @@ ZomekiCMS::Application.routes.draw do
         :controller => 'admin/items'
       resources :entries,
         :controller => 'admin/entries' do
+          get 'file_contents/(*path)' => 'admin/entries/files#content'
           collection do
             post :import
             get  :import
@@ -43,7 +44,8 @@ ZomekiCMS::Application.routes.draw do
     get 'node_dbs/:db_id/map'         => 'public/node/dbs#map'
     get 'node_dbs/:db_id/address'     => 'public/node/dbs#address'
     get 'node_dbs/:db_id/search'      => 'public/node/dbs#result'
-    get 'node_dbs/:db_id/entry/:name' => 'public/node/dbs#entry'
+    get 'node_dbs/:db_id/entry/:name(/:filename_base.:format)' => 'public/node/dbs#entry'
+    get 'node_dbs/:db_id/entry/:name/file_contents/(*path)' => 'public/node/dbs#file_content'
   end
 
 end

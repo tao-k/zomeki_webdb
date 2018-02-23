@@ -17,7 +17,7 @@
     <tr>
       <th><%= item.title %></th>
       <td>
-        <%= simple_format entry_item_value(item, @item, files) %>
+        <%= simple_format entry_item_value(item, @item, files).gsub(/file_contents\//, "#{@item.id}/file_contents/") %>
       </td>
     </tr>
   </table>
