@@ -1,11 +1,10 @@
 class Webdb::EntriesFinder < ApplicationFinder
-  def initialize(db, entries, user)
+  def initialize(db, entries)
     @db = db
     @entries = entries
-    @user = user
   end
 
-  def search(criteria)
+  def search(criteria, sort_key)
     @db.items.target_search_state.each do |item|
       value = criteria[item.name.to_sym]
       next if value.blank?
@@ -33,13 +32,15 @@ class Webdb::EntriesFinder < ApplicationFinder
         end
       end
     end
-    #sort_columns = @db.items.target_sort_state.pluck(:name)
-    #if sort_key && sort_columns
-    #  key, order  = sort_key.split(/\s/)
-    #  if idx = sort_columns.index(key)
-    #    @entries = @entries.order("item_values ->> '#{sort_columns[idx]}' #{ordering(order)}")
-    #  end
-    #end
+    sort_columns = @db.items.target_sort_state.pluck(:name)
+    if sort_key && sort_columns
+      key, order  = sort_key.split(/\s/)
+      if idx = sort_columns.index(key)
+        Rails.logger.debug "***"
+        Rails.logger.debug sort_columns[idx]
+        @entries = @entries.order("item_values -> '#{sort_columns[idx]}' #{ordering(order)}")
+      end
+    end
     @entries
   end
 
@@ -50,7 +51,7 @@ class Webdb::EntriesFinder < ApplicationFinder
   end
 
   def ordering(order)
-    order == "asc" ? "ASC" : "DESC"
+    order == "desc" ? "DESC" : "ASC"
   end
 
 end

@@ -50,8 +50,6 @@ class Webdb::Entry < ApplicationRecord
   end
 
   def preview_uri(terminal: nil, without_filename: false, params: {})
-    #return if terminal == :mobile && !terminal_mobile
-    #return if terminal.in?([nil, :pc, :smart_phone]) && !terminal_pc_or_smart_phone
     return if (path = public_uri(without_filename: true, with_closed_preview: true)).blank?
 
     flag = { mobile: 'm', smart_phone: 's' }[terminal]
@@ -101,10 +99,10 @@ class Webdb::Entry < ApplicationRecord
       case item.item_type
       when 'check_box'
         if item_values[item.name]
-          item_values[item.name]['text'] = item_values[item.name]['check'].present? ? item_values[item.name]['check'].join('／') : nil
+          item_values[item.name]['text'] = item_values.dig(item.name, 'check').present? ? item_values[item.name]['check'].join('／') : nil
         end
       when 'check_data'
-        if item_values[item.name] && item_values[item.name]['check'].present?
+        if item_values.dig(item.name, 'check').present?
           checks = []
           item_values[item.name]['check'].each{|w|
             item.item_options_for_select_data.each{|a| checks << a[0] if a[1] == w.to_i}
@@ -138,7 +136,7 @@ class Webdb::Entry < ApplicationRecord
           item_values[item.name]['text'] = value
         end
       when 'blank_weekday'
-        if item_values[item.name] && item_values[item.name]['weekday']
+        if item_values.dig(item.name, 'weekday')
           days = []
           item_values[item.name]['weekday'].each{|key, val|
             days << "#{self.class::WEEKDAY_OPTIONS[key.to_i]}：#{val}"

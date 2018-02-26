@@ -20,7 +20,7 @@ class Webdb::Public::Node::DbsController < Cms::Controller::Public::Base
 
   def map
     result
-    @markers = @items.joins(maps: :markers).distinct
+    @markers = @items.joins(maps: :markers)
     markers = []
     @markers.each do |entry|
       markers << entry.map_marker
@@ -42,7 +42,7 @@ class Webdb::Public::Node::DbsController < Cms::Controller::Public::Base
     Page.title = @db.title
     @entries = @db.entries.public_state
     criteria = entry_criteria
-    @items = Webdb::EntriesFinder.new(@db, @entries, Core.user).search(criteria).distinct
+    @items = Webdb::EntriesFinder.new(@db, @entries).search(criteria, sort_key)
       .paginate(page: params[:page], per_page: @db.display_limit || params[:limit])
   end
 

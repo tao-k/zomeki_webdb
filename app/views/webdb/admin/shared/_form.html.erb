@@ -36,12 +36,12 @@
         <%- when 'check_box' -%>
           <%- item.item_options_for_select.each_with_index{|w, i| -%>
             <label><%= check_box_tag "item[item_values][#{item.name}][check][]", w,
-              item_values[item.name] && item_values[item.name]['check'] ? item_values[item.name]['check'].index(w).present? : false %><%= w %></label>
+              item_values.dig(item.name, 'check') ? item_values[item.name]['check'].index(w).present? : false %><%= w %></label>
           <%- } -%>
          <%- when 'check_data' -%>
           <%- item.item_options_for_select_data.each_with_index{|w, i| -%>
             <label><%= check_box_tag "item[item_values][#{item.name}][check][]", w[1],
-              item_values[item.name] && item_values[item.name]['check'] ? item_values[item.name]['check'].index(w[1].to_s).present? : false %><%= w[0] %></label>
+              item_values.dig(item.name, 'check') ? item_values[item.name]['check'].index(w[1].to_s).present? : false %><%= w[0] %></label>
           <%- } -%>
          <%- when 'radio_button' -%>
           <%- item.item_options_for_select.each do |option| -%>
@@ -56,14 +56,14 @@
         <div><span>午前</span>
           <%- @item.class::WEEKDAY_OPTIONS.each_with_index{|w, i| -%>
             <label><%= check_box_tag "item[item_values][#{item.name}][am][#{i}]", true,
-              item_values[item.name] && item_values[item.name]['am'] ? item_values[item.name]['am'][i.to_s] : false %><%= w %></label>
+              item_values.dig(item.name, 'am') ? item_values[item.name]['am'][i.to_s] : false %><%= w %></label>
           <%- } -%>
         </div>
         <div><span>午後</span>
           <%- @item.class::WEEKDAY_OPTIONS.each_with_index{|w, i| -%>
             <label>
             <%= check_box_tag "item[item_values][#{item.name}][pm][#{i}]", '○',
-              item_values[item.name] && item_values[item.name]['pm'] ? item_values[item.name]['pm'][i.to_s] : false %><%= w %></label>
+              item_values.dig(item.name, 'pm') ? item_values[item.name]['pm'][i.to_s] : false %><%= w %></label>
           <%- } -%>
         </div>
         <%- when 'office_hours' -%>
@@ -72,9 +72,9 @@
             <div>
             <label><%= w %></label>
             <%= text_field_tag "item[item_values][#{item.name}][open][#{i}]",
-              item_values[item.name] && item_values[item.name]['open'] ? item_values[item.name]['open'][i.to_s] : nil %>～
+              item_values.dig(item.name, 'open') ? item_values[item.name]['open'][i.to_s] : nil %>～
               <%= text_field_tag "item[item_values][#{item.name}][close][#{i}]",
-              item_values[item.name] && item_values[item.name]['close'] ? item_values[item.name]['close'][i.to_s] : nil %>
+              item_values.dig(item.name, 'close') ? item_values[item.name]['close'][i.to_s] : nil %>
             </div>
           <%- } -%>
           <div>
@@ -89,7 +89,7 @@
             <%= w %>
               <%= select_tag "item[item_values][#{item.name}][weekday][#{i}]",
                              options_for_select(item.item_options_for_select,
-                             item_values[item.name] && item_values[item.name]['weekday'] ? item_values[item.name]['weekday'][i.to_s] : nil),
+                             item_values.dig(item.name, 'weekday') ? item_values[item.name]['weekday'][i.to_s] : nil),
                              style: item.style_attribute,
                              include_blank: true %>
           <%- } -%>

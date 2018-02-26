@@ -15,9 +15,11 @@ module Webdb::WebdbHelper
       nil
     end
     return nil if template_body.blank?
-    template_body = template_body.html_safe
-    template_body = template_body.gsub(/\[\[link\/detail_url\]\]/i, entry.public_uri)
-    template_body = template_body.gsub(/\[\[view\/map\]\]/i, render_map(entry))
+    template_body   = template_body.html_safe
+    #template_header = template_body.gsub(/\[\[view\/header\]\](.*)[\[view\/header\]\]/i, '\1')
+    #template_footer = template_body.gsub(/\[\[view\/footer\]\](.*)[\[view\/footer\]\]/i, '\1')
+    template_body   = template_body.gsub(/\[\[link\/detail_url\]\]/i, entry.public_uri)
+    template_body   = template_body.gsub(/\[\[view\/map\]\]/i, render_map(entry))
     return_body = nil
     files = entry.files
     db.items.inject(template_body.to_s) do |body, item|

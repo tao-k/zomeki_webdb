@@ -50,7 +50,7 @@ class Webdb::Admin::EntriesController < Cms::Controller::Admin::Base
   end
 
   def import
-    if params[:item] && params[:item][:file]
+    if params.dig(:item, :file)
       item = Webdb::EntryCsv.new
       item.db_id = @db.id
       item.file = params[:item][:file]
