@@ -44,4 +44,8 @@ ja:
         editor_id: 編集許可ログイン
         created_at: 作成日時
         updated_at: 更新日時
+      webdb/piece/form:
+        target_db_id: 対象データベース
+      webdb/piece/map:
+        target_db_id: 対象データベース
         

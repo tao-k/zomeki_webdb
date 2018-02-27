@@ -31,8 +31,10 @@ ZomekiCMS::Application.routes.draw do
       :path       => ':parent/node_dbs'
 
     ## pieces
-    resources :piece_titles,
-      :controller => 'admin/piece/dbs'
+    resources :piece_forms,
+      :controller => 'admin/piece/forms'
+    resources :piece_maps,
+      :controller => 'admin/piece/maps'
   end
 
 

@@ -36,8 +36,6 @@ class Webdb::EntriesFinder < ApplicationFinder
     if sort_key && sort_columns
       key, order  = sort_key.split(/\s/)
       if idx = sort_columns.index(key)
-        Rails.logger.debug "***"
-        Rails.logger.debug sort_columns[idx]
         @entries = @entries.order("item_values -> '#{sort_columns[idx]}' #{ordering(order)}")
       end
     end

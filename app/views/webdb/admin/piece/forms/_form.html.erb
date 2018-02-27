@@ -1,0 +1,11 @@
+<%= render 'shared/admin/piece/form', f: f do -%>
+<p class="form">詳細設定</p>
+
+<table class="show">
+  <tr>
+    <th><%= f.label :target_db_id %></th>
+    <td><%= select_tag 'in_settings[target_db_id]',
+      options_from_collection_for_select(@item.target_dbs, :id, :title, @item.target_db_id), include_blank: true %></td>
+  </tr>
+</table>
+<%- end -%>
