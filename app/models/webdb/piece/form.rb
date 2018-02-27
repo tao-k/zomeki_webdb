@@ -7,7 +7,7 @@ class Webdb::Piece::Form < Cms::Piece
   end
 
   def target_db_id
-    setting_value(:target_db_id)
+    setting_value(:target_db_id).to_i
   end
 
   def target_db
@@ -17,6 +17,10 @@ class Webdb::Piece::Form < Cms::Piece
 
   def target_dbs
     content.dbs
+  end
+
+  def target_dbs_for_option
+    target_dbs.map {|g| [g.title, g.id] }
   end
 
 

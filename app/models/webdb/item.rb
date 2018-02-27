@@ -1,7 +1,6 @@
 class Webdb::Item < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Auth::Manager
-  include Cms::Model::Site
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Editor
   include Sys::Model::Rel::EditableGroup
@@ -36,7 +35,7 @@ class Webdb::Item < ApplicationRecord
 
   after_initialize :set_defaults
 
-  define_site_scope :db
+  nested_scope :in_site, through: :db
 
   scope :public_state, -> { where(state: 'public') }
 

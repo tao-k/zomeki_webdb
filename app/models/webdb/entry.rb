@@ -1,7 +1,6 @@
 class Webdb::Entry < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Auth::Manager
-  include Cms::Model::Site
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Editor
   include Sys::Model::Rel::File

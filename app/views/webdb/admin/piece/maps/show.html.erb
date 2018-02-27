@@ -4,7 +4,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :target_db_id %></th>
-    <td><%= @item.target_db.try(:name) %></td>
+    <td><%= @item.target_db.try(:title) %></td>
   </tr>
 </table>
 <%- end -%>
