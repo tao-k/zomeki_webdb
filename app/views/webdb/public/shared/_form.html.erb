@@ -2,6 +2,13 @@
   <%= hidden_field_tag 'sort', db.items.target_sort_state.first.try(:name) %>
   <legend>項目で探す</legend>
   <table class="show">
+  <div class="search_keyword">
+    <fieldset>
+      <legend>キーワード</legend>
+      <ul>
+        <li><%= text_field_tag "keyword", '' %></li>
+      </ul>
+  </div>
   <% items.each do |item| %>
     <div class="criteria_<%=item.name%>">
       <fieldset>
@@ -59,7 +66,7 @@
             </li>
           <%- } -%>
         <%- else -%>
-          <%= text_field_tag "criteria[#{item.name}]", '' %>
+          <li><%= text_field_tag "criteria[#{item.name}]", '' %></li>
         <%end%>
         </ul>
       </fieldset>

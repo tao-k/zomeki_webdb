@@ -4,7 +4,7 @@ class Webdb::EntriesFinder < ApplicationFinder
     @entries = entries
   end
 
-  def search(criteria, sort_key)
+  def search(criteria, keyword, sort_key)
     @db.items.target_search_state.each do |item|
       value = criteria[item.name.to_sym]
       next if value.blank?
@@ -32,6 +32,16 @@ class Webdb::EntriesFinder < ApplicationFinder
         end
       end
     end
+
+    keyword_columns = @db.items.target_keyword_state.pluck(:name)
+    if keyword && keyword_columns
+      queries = []
+      keyword_columns.each do |w|
+        queries << %Q(item_values ->> '#{w}' like :keyword)
+      end
+      @entries = @entries.where(queries.join(" OR "), keyword: "%#{keyword}%")
+    end
+
     sort_columns = @db.items.target_sort_state.pluck(:name)
     if sort_key && sort_columns
       key, order  = sort_key.split(/\s/)
