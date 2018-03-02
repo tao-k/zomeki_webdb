@@ -1,6 +1,6 @@
 class Webdb::Public::Node::DbsController < Cms::Controller::Public::Base
   skip_after_action :render_public_layout, :only => [:file_content, :qrcode]
-  before_action :login_users, except: [:index]
+  before_action :login_users, except: [:index, :editors]
 
   def pre_dispatch
     @content = ::Webdb::Content::Db.find_by(id: Page.current_node.content.id)
@@ -63,6 +63,15 @@ class Webdb::Public::Node::DbsController < Cms::Controller::Public::Base
 
   def editors
     Page.title = @db.title
+    @items = []
+    @content.dbs.each do |db|
+      @db = db
+      login_users
+      next if @editor_user.blank?
+      entries = db.entries.where(editor_id: @editor_user.id)
+      next if entries.blank?
+      @items.concat(entries)
+    end
   end
 
   def edit
@@ -73,7 +82,7 @@ class Webdb::Public::Node::DbsController < Cms::Controller::Public::Base
     entry
     @entry.attributes = entry_params
     if @entry.save
-      @entry.public_uri
+      return redirect_to @entry.edit_uri
     else
       render :edit
     end

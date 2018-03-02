@@ -17,7 +17,6 @@ class Webdb::Entry < ApplicationRecord
   delegate :content, to: :db
 
   validates :db, presence: true
-  validates :title, presence: true
 
   after_initialize :set_defaults
   before_save :set_name
@@ -37,19 +36,16 @@ class Webdb::Entry < ApplicationRecord
     end
   end
 
-  def public_uri(without_filename: false, with_closed_preview: false)
-    uri =
-      if with_closed_preview && content.main_node && content.main_node.public_uri.present?
-        "#{content.main_node.public_uri}#{self.db_id}/entry/#{name}/"
-      elsif !with_closed_preview && content.public_node
-        "#{content.public_node.public_uri}#{self.db_id}/entry/#{name}/"
-      end
-    return '' unless uri
-    uri
+  def public_uri
+    "#{content.public_node.public_uri}#{self.db_id}/entry/#{name}/"
   end
 
-  def preview_uri(terminal: nil, without_filename: false, params: {})
-    return if (path = public_uri(without_filename: true, with_closed_preview: true)).blank?
+  def edit_uri
+    "#{content.public_node.public_uri}#{self.db_id}/edit/#{name}/"
+  end
+
+  def preview_uri(terminal: nil, params: {})
+    return if (path = public_uri).blank?
 
     flag = { mobile: 'm', smart_phone: 's' }[terminal]
     query = "?#{params.to_query}" if params.present?

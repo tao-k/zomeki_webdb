@@ -42,7 +42,9 @@ class Webdb::EntriesFinder < ApplicationFinder
     sort_columns = @db.items.target_sort_state.pluck(:name)
     if sort_key && sort_columns
       key, order  = sort_key.split(/\s/)
-      @entries = @entries.order("item_values -> '#{sort_columns[idx]}' #{ordering(order)}") if idx = sort_columns.index(key)
+      if idx = sort_columns.index(key)
+        @entries = @entries.order("item_values -> '#{sort_columns[idx]}' #{ordering(order)}")
+      end
     end
     @entries
   end

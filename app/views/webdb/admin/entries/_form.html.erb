@@ -1,13 +1,6 @@
 <%= init_ckeditor baseHref: "#{webdb_db_entries_path(content: @content, db_id: @db.id, id: @item.id.to_i)}/" %>
 <span class="note">※は必須項目です。</span>
 
-<table class="show">
-  <tr>
-    <th><%= f.label :title %> <span class="note">※</span></th>
-    <td><%= f.text_field :title, :class => 'title' %></td>
-  </tr>
-</table>
-
 <%= render 'webdb/admin/shared/form', db: @item.db, item_values: @item.item_values if @item.db %>
 
 <% if defined?(ZomekiLogin::Engine) && @db.editor_content %>

@@ -1,11 +1,4 @@
 <%= init_ckeditor readOnly: true %>
-<table class="show">
-  <tr>
-    <th><%= @item.class.human_attribute_name :title %></th>
-    <td><%= @item.title %></td>
-  </tr>
-</table>
-
 <%= render 'webdb/admin/shared/show', db: @item.db, item_values: @item.item_values,
   files: @item.files,  file_uri: @item.file_content_uri if @item.db %>
 

@@ -28,7 +28,8 @@ module Webdb::WebdbHelper
     end
   end
 
-  def entry_item_value(item, entry, files, login_user=nil)
+  def entry_item_value(item, entry, files)
+    return nil if item.blank? || entry.blank?
     value = entry.item_values[item.name].present? ? entry.item_values[item.name] : ''
     case item.item_type
     when 'text_area'
