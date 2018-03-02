@@ -1,7 +1,7 @@
 # encoding: utf-8
 module ZomekiWebdb::Model::Rel::TargetDate
   def self.included(mod)
-    mod.has_many :dates, :foreign_key => 'entry_id', :class_name => 'Webdb::EntryDate', :dependent => :destroy
+    mod.has_many :dates, :foreign_key => 'entry_id', :class_name => 'Webdb::Entry::Date', :dependent => :destroy
 
     mod.after_save :save_target_dates
   end
@@ -25,20 +25,20 @@ module ZomekiWebdb::Model::Rel::TargetDate
     return false unless id
     return false if @_sent_target_dates
     @_sent_target_dates = true
-    Webdb::EntryDate.where(entry_id: id).update_all(event_date: nil)
+    Webdb::Entry::Date.where(entry_id: id).update_all(event_date: nil)
     @dates.each do |key, in_target_date|
       event_date = in_target_date[:event_date] || nil
       next if event_date.blank?
       option_value = in_target_date[:option_value] || nil
       item_name    = in_target_date[:name] || nil
-      event = self.dates.where(Webdb::EntryDate.arel_table[:event_date].eq(nil)).where(name: item_name).first || self.dates.new
+      event = self.dates.where(Webdb::Entry::Date.arel_table[:event_date].eq(nil)).where(name: item_name).first || self.dates.new
       event.entry_id      = id
       event.event_date    = event_date
       event.option_value  = option_value
       event.name          = item_name
       event.save
     end
-    Webdb::EntryDate.where(Webdb::EntryDate.arel_table[:event_date].eq(nil)).destroy_all
+    Webdb::Entry::Date.where(Webdb::Entry::Date.arel_table[:event_date].eq(nil)).destroy_all
 
     return true
   end

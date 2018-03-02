@@ -4,7 +4,7 @@ class Webdb::ImportEntryJob < ApplicationJob
   MAX_LOOP = 1000
 
   def perform(item_id)
-    csv = Webdb::EntryCsv.find_by(id: item_id)
+    csv = Webdb::Entry::Csv.find_by(id: item_id)
     csv.parse_state = 'progress'
     csv.parse_start_at = Time.now
     csv.parse_success = 0
@@ -30,7 +30,7 @@ class Webdb::ImportEntryJob < ApplicationJob
 
 private
   def register(item_id)
-    csv = Webdb::EntryCsv.find_by(id: item_id)
+    csv = Webdb::Entry::Csv.find_by(id: item_id)
     csv.register_state = 'progress'
     csv.register_start_at = Time.now
     csv.register_total = csv.valid_csv_lines.count

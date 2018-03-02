@@ -1,4 +1,4 @@
-class Webdb::EntryCsv < Webdb::Csv
+class Webdb::Entry::Csv < Webdb::Csv
   default_scope { where(:csv_type => self.name) }
 
   def parse_line(row, i)

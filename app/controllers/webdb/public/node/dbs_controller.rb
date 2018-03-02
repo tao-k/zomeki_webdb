@@ -1,10 +1,15 @@
 class Webdb::Public::Node::DbsController < Cms::Controller::Public::Base
   skip_after_action :render_public_layout, :only => [:file_content, :qrcode]
+  before_action :login_users, except: [:index]
 
   def pre_dispatch
     @content = ::Webdb::Content::Db.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content
     @node = Page.current_node
+    if params[:db_id]
+      @db    = @content.public_dbs.find_by(id: params[:db_id])
+      return http_error(404) unless @db
+    end
   end
 
   def index
@@ -29,16 +34,11 @@ class Webdb::Public::Node::DbsController < Cms::Controller::Public::Base
   end
 
   def address
-    @db    = @content.public_dbs.find_by(id: params[:db_id])
-    return http_error(404) unless @db
     Page.title = @db.title
   end
 
   def result
-    @db    = @content.public_dbs.find_by(id: params[:db_id])
-    return http_error(404) unless @db
-    login_users(@db)
-    @list_style = @member_user.present? ? :member_list : :list
+    @list_style = @member_user.present? || @editor_user.present? ? :member_list : :list
     Page.title = @db.title
     @entries = @db.entries.public_state
     criteria = entry_criteria
@@ -48,8 +48,6 @@ class Webdb::Public::Node::DbsController < Cms::Controller::Public::Base
 
 
   def file_content
-    @db    = @content.public_dbs.find_by(id: params[:db_id])
-    return http_error(404) unless @db
     @entry = @db.entries.find_by(name: params[:name])
     params[:file] = File.basename(params[:path])
     params[:type] = :thumb if params[:path] =~ /(\/|^)thumb\//
@@ -59,18 +57,34 @@ class Webdb::Public::Node::DbsController < Cms::Controller::Public::Base
   end
 
   def entry
-    @db    = @content.public_dbs.find_by(id: params[:db_id])
-    return http_error(404) unless @db
-    login_users(@db)
-    @list_style = @member_user.present? ? :member_detail : :detail
+    @list_style = @member_user.present? || @editor_user.present? ? :member_detail : :detail
     @entry = @db.entries.find_by(name: params[:name])
+  end
+
+  def editors
+    Page.title = @db.title
+  end
+
+  def edit
+    entry
+  end
+
+  def update
+    entry
+    @entry.attributes = entry_params
+    if @entry.save
+      @entry.public_uri
+    else
+      render :edit
+    end
   end
 
   private
 
-  def login_users(db)
-    @member_user = db.member_content ? db.member_content.login_user : nil
-    @editor_user = db.editor_content ? db.editor_content.login_user : nil
+  def login_users
+    return if @db.blank?
+    @member_user = @db.member_content ? @db.member_content.login_user : nil
+    @editor_user = @db.editor_content ? @db.editor_content.login_user : nil
   end
 
   def entry_criteria
@@ -79,6 +93,16 @@ class Webdb::Public::Node::DbsController < Cms::Controller::Public::Base
 
   def sort_key
     params[:sort] ? params[:sort] : nil
+  end
+
+
+  def entry_params
+    params.require(:entry).permit(:title, :editor_id, :item_values, :in_target_date,
+      :maps_attributes => [:id, :name, :title, :map_lat, :map_lng, :map_zoom,
+      :markers_attributes => [:id, :name, :lat, :lng]]).tap do |whitelisted|
+      whitelisted[:item_values] = params[:entry][:item_values].permit! if params[:entry][:item_values]
+      whitelisted[:in_target_dates] = params[:entry][:in_target_dates].permit! if params[:entry][:in_target_dates]
+    end
   end
 
 end

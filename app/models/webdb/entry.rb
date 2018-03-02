@@ -83,12 +83,8 @@ class Webdb::Entry < ApplicationRecord
 
   def set_name
     return if self.name.present?
-    date = if created_at
-             created_at.strftime('%Y%m%d')
-           else
-             Date.strptime(Core.now, '%Y-%m-%d').strftime('%Y%m%d')
-           end
-    seq = Util::Sequencer.next_id('gp_article_docs', version: date, site_id: content.site_id)
+    date = (created_at || Time.now).strftime('%Y%m%d')
+    seq = Util::Sequencer.next_id('webdb_entry', version: date, site_id: content.site_id)
     self.name = Util::String::CheckDigit.check(date + format('%04d', seq))
   end
 
