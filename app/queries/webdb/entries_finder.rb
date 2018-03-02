@@ -35,19 +35,14 @@ class Webdb::EntriesFinder < ApplicationFinder
 
     keyword_columns = @db.items.target_keyword_state.pluck(:name)
     if keyword && keyword_columns
-      queries = []
-      keyword_columns.each do |w|
-        queries << %Q(item_values ->> '#{w}' like :keyword)
-      end
+      queries = keyword_columns.map{|w| %Q(item_values ->> '#{w}' like :keyword)}
       @entries = @entries.where(queries.join(" OR "), keyword: "%#{keyword}%")
     end
 
     sort_columns = @db.items.target_sort_state.pluck(:name)
     if sort_key && sort_columns
       key, order  = sort_key.split(/\s/)
-      if idx = sort_columns.index(key)
-        @entries = @entries.order("item_values -> '#{sort_columns[idx]}' #{ordering(order)}")
-      end
+      @entries = @entries.order("item_values -> '#{sort_columns[idx]}' #{ordering(order)}") if idx = sort_columns.index(key)
     end
     @entries
   end

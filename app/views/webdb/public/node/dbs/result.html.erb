@@ -17,6 +17,7 @@
       <%= hidden_field_tag "criteria[#{item.name}]", params.dig(:criteria, item.name)%>
     <%- end -%>
   <%- end -%>
+  <%= hidden_field_tag "keyword", params[:keyword]%>
   <%= select_tag 'sort',
       options_from_collection_for_select(@db.items.target_sort_state, :id, :title, params[:sort]),
       onchange: "submit(this.form)" %>
